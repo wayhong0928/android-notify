@@ -1,10 +1,14 @@
 package com.example.cycu_notification_system
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ListView
+import androidx.core.content.ContextCompat.startActivity
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
@@ -75,7 +79,7 @@ class Getpost(private val mainActivity: MainActivity) {
                             val button = Button(mainActivity)
                             button.text = "$i - $name"
                             button.setOnClickListener {
-                                fetchContent(id)
+                                fetchContent(id, mainActivity)
                             }
                             buttonContainer.addView(button)
                         }
@@ -85,7 +89,7 @@ class Getpost(private val mainActivity: MainActivity) {
         })
     }
 
-    private fun fetchContent(id: String) {
+    private fun fetchContent(id: String, context: MainActivity) {
         val client = OkHttpClient()
 
         val requestBody = JSONObject()
@@ -99,6 +103,11 @@ class Getpost(private val mainActivity: MainActivity) {
             .headers(header)
             .build()
 
+        data class Content(
+            val title: String,
+            val sn: String
+        )
+
         client.newCall(requestContent).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("FetchContent", "無法取得內容。", e)
@@ -110,16 +119,30 @@ class Getpost(private val mainActivity: MainActivity) {
                     val jsonResponse = JSONObject(it)
                     val contentArray = jsonResponse.getJSONArray("content")
 
-                    val contentList = arrayListOf<String>()
+                    val contentList = arrayListOf<Content>()
+
                     for (i in 0 until contentArray.length()) {
                         val item = contentArray.getJSONObject(i)
                         val title = item.getString("TITLE")
-                        contentList.add(title)
+                        val sn = item.getString("SN")
+                        contentList.add(Content(title, sn))
                     }
 
                     mainActivity.runOnUiThread {
-                        val contentAdapter = ArrayAdapter(mainActivity, android.R.layout.simple_list_item_1, contentList)
+                        val contentAdapter = ArrayAdapter(mainActivity, android.R.layout.simple_list_item_1, contentList.map { it.title })
                         listView.adapter = contentAdapter
+
+                        listView.setOnItemClickListener { _, _, position, _ ->
+                            val selectedContent = contentList[position]
+                            val url = "https://ann.cycu.edu.tw/aa/frontend/AnnItem.jsp?sn=${selectedContent.sn}"
+
+                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            try {
+                                context.startActivity(browserIntent)
+                            } catch (e: ActivityNotFoundException) {
+                                Log.e("Error", "Activity not found to handle Intent.")
+                            }
+                        }
                     }
                 }
             }
