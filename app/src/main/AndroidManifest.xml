@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cycunotificationsystem"
         tools:targetApi="31">
+        <service
+            android:name=".Notify"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".Profile"
             android:exported="false" />
