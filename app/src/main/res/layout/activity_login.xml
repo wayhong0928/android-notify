@@ -1,27 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/title"
-        android:gravity="center"
-        android:text="個人資料"
-        android:textSize="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentTop="true"
-        android:drawableLeft="@drawable/back"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="70dp"
-        android:layout_below="@+id/title">
+        android:paddingTop="70dp">
         <TextView
             android:id="@+id/title_login"
             android:layout_width="match_parent"
@@ -44,16 +32,17 @@
             android:paddingRight="30dp"
             android:paddingTop="30dp"
             android:orientation="horizontal">
+
             <EditText
-                android:id="@+id/name"
+                android:id="@+id/ed_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_style"
-                android:hint="Enter username"
                 android:gravity="center"
+                android:hint="Enter account"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_login"/>
+                app:layout_constraintTop_toBottomOf="@+id/title_login" />
         </LinearLayout>
 
         <LinearLayout
@@ -71,7 +60,6 @@
                 android:hint="Enter password"
                 android:gravity="center"
                 android:inputType="textPassword"
-                android:drawableRight="@drawable/eye"
                 android:paddingRight="20dp"
                 android:paddingLeft="20dp"
                 android:longClickable="false"
@@ -111,11 +99,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Not Registered? "
-                android:textSize="15dp"
+                android:textSize="18dp"
                 />
             <Button
                 style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/regis_link"
+                android:id="@+id/btn_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Click here"
@@ -142,17 +130,6 @@
             android:layout_height="wrap_content"
             android:text="首頁"
             android:drawableLeft="@drawable/home"
-            android:textSize="20dp"
-            android:layout_margin="10dp"
-            android:layout_weight="0.5"
-            android:textColor="@color/black"/>
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/personal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="個人頁面"
-            android:drawableLeft="@drawable/person"
             android:textSize="20dp"
             android:layout_margin="10dp"
             android:layout_weight="0.5"

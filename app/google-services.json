@@ -12,7 +12,20 @@
           "package_name": "com.example.cycu_notification_system"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "14867064419-svbn0nq43vnk0ll7546h2vplq1lk9t34.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cycu_notification_system",
+            "certificate_hash": "c6b75c7ab83f501583c561824f85782ddb110beb"
+          }
+        },
+        {
+          "client_id": "14867064419-6rjhoqc1m2og1vmi7e17ohvn9ul9luje.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD16uQ27r2u1CJ_xV5nDjaLdXk5rkYjKj0"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "14867064419-6rjhoqc1m2og1vmi7e17ohvn9ul9luje.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -13,8 +13,7 @@
         android:text="個人資料"
         android:textSize="30dp"
         android:layout_marginTop="10dp"
-        android:layout_alignParentTop="true"
-        android:drawableLeft="@drawable/back"/>
+        android:layout_alignParentTop="true"/>
 
 
     <LinearLayout
@@ -190,18 +189,6 @@
             android:layout_height="wrap_content"
             android:text="首頁"
             android:drawableLeft="@drawable/home"
-            android:textSize="20dp"
-            android:layout_margin="10dp"
-            android:layout_weight="0.5"
-            />
-        <Button
-            android:background="@drawable/btn_2"
-            android:textColor="#cdb495"
-            android:id="@+id/personal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="個人頁面"
-            android:drawableLeft="@drawable/person"
             android:textSize="20dp"
             android:layout_margin="10dp"
             android:layout_weight="0.5"

@@ -106,19 +106,6 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         >
-
-        <Button
-            android:background="@drawable/btn_2"
-            android:textColor="#cdb495"
-            android:id="@+id/main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="首頁"
-            android:drawableLeft="@drawable/home"
-            android:textSize="20dp"
-            android:layout_margin="10dp"
-            android:layout_weight="0.5"
-            />
         <Button
             style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/personal"

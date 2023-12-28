@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ListView
-import androidx.core.content.ContextCompat.startActivity
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
