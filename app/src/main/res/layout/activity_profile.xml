@@ -53,8 +53,9 @@
             android:text="行政公告"
             android:textStyle="bold"
             android:textSize="20dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="20dp"
+            android:layout_marginRight="50dp"
             />
         <CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/chec_2"
@@ -71,8 +72,9 @@
             android:text="徵才公告"
             android:textStyle="bold"
             android:textSize="20dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
             />
         <CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/chec_3"
@@ -89,8 +91,9 @@
             android:text="校內徵才"
             android:textStyle="bold"
             android:textSize="20dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
             />
         <CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/chec_4"
@@ -107,8 +110,9 @@
             android:text="校外來文"
             android:textStyle="bold"
             android:textSize="20dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
             />
         <CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/chec_5"
@@ -125,8 +129,9 @@
             android:text="實習/就業"
             android:textStyle="bold"
             android:textSize="20dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
             />
         <CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/chec_6"
@@ -143,22 +148,23 @@
             android:text="活動預告"
             android:textStyle="bold"
             android:textSize="20dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
             />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
+            android:layout_margin="20dp"
             >
 
             <Button
-                android:id="@+id/update"
+                android:id="@+id/btn_update"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:background="@drawable/btn_2"
-                android:text="更新公告"
+                android:text="更新訂閱公告"
                 android:textColor="#cdb495" />
 
             <Button
@@ -166,8 +172,8 @@
                 android:textColor="#cdb495"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/logout"
-                android:text="LOGOUT"
+                android:id="@+id/btn_logout"
+                android:text="登出"
                 android:layout_marginLeft="50dp"/>
 
         </LinearLayout>
@@ -184,10 +190,10 @@
         <Button
             android:background="@drawable/btn_2"
             android:textColor="#cdb495"
-            android:id="@+id/main"
+            android:id="@+id/btn_index"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="首頁"
+            android:text="INDEX"
             android:drawableLeft="@drawable/home"
             android:textSize="20dp"
             android:layout_margin="10dp"

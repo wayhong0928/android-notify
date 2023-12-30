@@ -125,10 +125,10 @@
 
         <Button
             style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/main"
+            android:id="@+id/btn_index"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="首頁"
+            android:text="INDEX"
             android:drawableLeft="@drawable/home"
             android:textSize="20dp"
             android:layout_margin="10dp"

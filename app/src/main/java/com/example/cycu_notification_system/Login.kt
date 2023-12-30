@@ -2,6 +2,7 @@ package com.example.cycu_notification_system
 
 import SetSQL
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.database.Cursor
@@ -22,12 +23,14 @@ class Login : AppCompatActivity() {
     private lateinit var db: SQLiteDatabase
     private lateinit var userAccount: SharedPreferences
     private lateinit var userName: SharedPreferences
+    private lateinit var btn_index: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         useraccount = findViewById(R.id.ed_account)
         pwd = findViewById(R.id.pwd)
+        btn_index = findViewById(R.id.btn_index)
         btn_login = findViewById(R.id.btn_login)
         btn_register = findViewById(R.id.btn_register)
         userAccount = getSharedPreferences("useraccount", MODE_PRIVATE)
@@ -37,27 +40,27 @@ class Login : AppCompatActivity() {
         db = setSQL.readableDatabase
 
         btn_login.setOnClickListener {
-            val username = useraccount.text.toString().trim()
+            val useraccount = useraccount.text.toString().trim()
             val password = pwd.text.toString().trim()
 
             // Log 登入開始
             Log.d("LoginStatus", "登入開始")
 
-            if (validateLogin(username, password)) {
+            if (validateLogin(useraccount, password)) {
                 // 登入成功
                 Toast.makeText(this, "登入成功", Toast.LENGTH_SHORT).show()
                 isLoggedIn = true
                 // 從資料庫取得名稱
-                val name = getNameFromDatabase(username)
+                val name = getNameFromDatabase(useraccount)
 
                 // 設定 SharedPreferences
-                val editorID = userAccount.edit()
-                editorID.putString("useraccount", username)
-                editorID.apply()
-
-                val editorName = userName.edit()
-                editorName.putString("username", name)
-                editorName.apply()
+                val sharedPrefs = getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                val editor = sharedPrefs.edit()
+                editor.putString("useraccount", useraccount)
+                editor.putString("username", name)
+                editor.apply()
+                Log.d("UserData", "User Account: $useraccount")
+                Log.d("UserData", "User Name: $name")
 
                 // Log 登入成功
                 Log.d("LoginStatus", "登入成功")
@@ -74,7 +77,10 @@ class Login : AppCompatActivity() {
                 Log.d("LoginStatus", "登入失敗")
             }
         }
-
+        btn_index.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
         btn_register.setOnClickListener {
             // 跳轉到註冊頁面
             val intent = Intent(this, Register::class.java)

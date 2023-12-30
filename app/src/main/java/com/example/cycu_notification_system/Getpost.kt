@@ -107,6 +107,8 @@ class Getpost(private val mainActivity: MainActivity) {
             val sn: String
         )
 
+        // 第一次安裝的時候都是0，後面如果有更新就要發送對應的通知給user。
+
         client.newCall(requestContent).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("FetchContent", "無法取得內容。", e)

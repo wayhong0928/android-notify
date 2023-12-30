@@ -26,16 +26,18 @@ class MainActivity : AppCompatActivity() {
         if (isFirstRun) {
             // 第一次開啟應用程式，初始化
             dbHelper = SetSQL(this)
-            getpost = Getpost(this)
-            getpost.initializeViews()
-            val notify = Notify(this)
-            notify.startNotifyAfterDelay()
 
             // 不再是第一次開啟應用程式
             val editor = sharedPrefs.edit()
             editor.putBoolean("isFirstRun", false)
             editor.apply()
         }
+        getpost = Getpost(this)
+        getpost.initializeViews()
+
+//        通知的東西再想想吧
+//        val notify = Notify(this)
+//        notify.startNotifyAfterDelay()
 
         val btn_personal = findViewById<Button>(R.id.personal)
         btn_personal.setOnClickListener {

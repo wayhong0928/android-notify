@@ -12,7 +12,6 @@ class SetSQL(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        // 在第一次建立資料庫時執行建表和初始化操作
         createTables(db)
         insertInitialData(db)
     }
@@ -24,22 +23,15 @@ class SetSQL(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 
     // 建立資料表
     private fun createTables(db: SQLiteDatabase) {
         db.execSQL("CREATE TABLE IF NOT EXISTS Members (ID INTEGER PRIMARY KEY AUTOINCREMENT, Account TEXT UNIQUE NOT NULL, Username TEXT NOT NULL, Password TEXT NOT NULL)")
-        db.execSQL("CREATE TABLE IF NOT EXISTS Categories (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS Categories (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Sn INT)")
         db.execSQL("CREATE TABLE IF NOT EXISTS SubscriptionCategories (MemberID INTEGER, CategoryID INTEGER, PRIMARY KEY (MemberID, CategoryID), FOREIGN KEY (MemberID) REFERENCES Members(ID), FOREIGN KEY (CategoryID) REFERENCES Categories(ID))")
     }
 
     // 初始資料
     private fun insertInitialData(db: SQLiteDatabase) {
-        // 檢查 Members 和 Categories 表是否已經有資料，如果有資料就不再插入初始資料
-        val membersCount = getTableCount(db, "Members")
-        val categoriesCount = getTableCount(db, "Categories")
-
-        if (membersCount == 0 && categoriesCount == 0) {
-            // 執行插入初始資料的操作
-            db.execSQL("INSERT INTO Categories (Name) VALUES ('行政公告'), ('徵才公告'), ('校內徵才'), ('校外來文'), ('實習/就業'), ('活動預告')")
-            db.execSQL("INSERT INTO Members (Account, Username, Password) VALUES ('user1', 'User One', 'password1'), ('user2', 'User Two', 'password2'), ('user3', 'User Three', 'password3')")
-            db.execSQL("INSERT INTO SubscriptionCategories (MemberID, CategoryID) VALUES (1, 2), (1, 4), (1, 5), (2, 1), (2, 2), (3, 2)")
-        }
+        db.execSQL("INSERT INTO Members (Account, Username, Password) VALUES ('user1', 'User One', 'password1'), ('user2', 'User Two', 'password2'), ('user3', 'User Three', 'password3')")
+        db.execSQL("INSERT INTO Categories (Name, Sn) VALUES ('行政公告', \"0\"), ('徵才公告', \"0\"), ('校內徵才', \"0\"), ('校外來文', \"0\"), ('實習/就業', \"0\"), ('活動預告', \"0\");")
+        db.execSQL("INSERT INTO SubscriptionCategories (MemberID, CategoryID) VALUES (1, 2), (1, 4), (1, 5), (2, 1), (2, 2), (3, 2)")
     }
 
     // 取得表的資料列數量
@@ -50,8 +42,7 @@ class SetSQL(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 
         cursor.close()
         return count
     }
-
-    // Function to get user ID from account
+    // 用 user 帳戶調出他的 ID 再去抓訂閱公告類別
     @SuppressLint("Range")
     fun getUserIdFromAccount(userAccount: String): Int {
         val db = readableDatabase
@@ -68,7 +59,7 @@ class SetSQL(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 
         return userId
     }
 
-    // Function to get subscribed categories by user ID
+    // 用 userID 抓取訂閱公告類別
     @SuppressLint("Range")
     fun getUserSubscribedCategories(userId: Int): List<Int> {
         val db = readableDatabase
