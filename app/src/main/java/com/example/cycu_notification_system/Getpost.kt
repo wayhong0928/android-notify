@@ -13,7 +13,6 @@ import org.json.JSONObject
 import java.io.IOException
 
 class Getpost(private val mainActivity: MainActivity) {
-
     private val BASE_URL = "https://itouch.cycu.edu.tw/home/mvc"
     private val header = Headers.Builder()
         .add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36")
@@ -22,6 +21,7 @@ class Getpost(private val mainActivity: MainActivity) {
     private lateinit var listView: ListView
     private var catalog: HashMap<Int, CatalogItem> = HashMap()
     private lateinit var buttonItems: ArrayList<Button>
+
 
     fun initializeViews() {
         listView = mainActivity.findViewById(R.id.listView)
@@ -41,7 +41,6 @@ class Getpost(private val mainActivity: MainActivity) {
             add(button5)
             add(button6)
         }
-
         fetchDataAndNotify()
     }
 
@@ -60,6 +59,7 @@ class Getpost(private val mainActivity: MainActivity) {
             }
 
             override fun onResponse(call: Call, response: Response) {
+
                 val responseData = response.body()?.string()
                 responseData?.let {
                     val jsonResponse = JSONObject(it)
@@ -107,8 +107,6 @@ class Getpost(private val mainActivity: MainActivity) {
             val sn: String
         )
 
-        // 第一次安裝的時候都是0，後面如果有更新就要發送對應的通知給user。
-
         client.newCall(requestContent).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("FetchContent", "無法取得內容。", e)
@@ -125,8 +123,8 @@ class Getpost(private val mainActivity: MainActivity) {
                     for (i in 0 until contentArray.length()) {
                         val item = contentArray.getJSONObject(i)
                         val title = item.getString("TITLE")
-                        val sn = item.getString("SN")
-                        contentList.add(Content(title, sn))
+                        val sn = item.getString("SN").toInt()
+                        contentList.add(Content(title, sn.toString()))
                     }
 
                     mainActivity.runOnUiThread {

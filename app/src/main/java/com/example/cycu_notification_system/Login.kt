@@ -1,6 +1,5 @@
 package com.example.cycu_notification_system
 
-import SetSQL
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -13,7 +12,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.example.cycu_notification_system.UserSession.isLoggedIn
 
 class Login : AppCompatActivity() {
     private lateinit var useraccount: EditText
@@ -26,6 +24,7 @@ class Login : AppCompatActivity() {
     private lateinit var btn_index: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         useraccount = findViewById(R.id.ed_account)
@@ -48,8 +47,8 @@ class Login : AppCompatActivity() {
 
             if (validateLogin(useraccount, password)) {
                 // 登入成功
-                Toast.makeText(this, "登入成功", Toast.LENGTH_SHORT).show()
-                isLoggedIn = true
+                Toast.makeText(this@Login, "登入成功", Toast.LENGTH_SHORT).show()
+                UserSession.setLoggedIn(this@Login, true)
                 // 從資料庫取得名稱
                 val name = getNameFromDatabase(useraccount)
 
@@ -66,12 +65,12 @@ class Login : AppCompatActivity() {
                 Log.d("LoginStatus", "登入成功")
 
                 // Intent 到首頁
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this@Login, MainActivity::class.java)
                 startActivity(intent)
                 finish() // 結束登入頁面
             } else {
                 // 登入失敗
-                Toast.makeText(this, "登入失敗", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@Login, "登入失敗", Toast.LENGTH_SHORT).show()
 
                 // Log 登入失敗
                 Log.d("LoginStatus", "登入失敗")

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
-import com.example.cycu_notification_system.UserSession.isLoggedIn
 
 class Logout(private val context: Context) {
     fun logout() {
@@ -14,7 +13,7 @@ class Logout(private val context: Context) {
         editor.remove("username")
         editor.apply()
 
-        isLoggedIn = false
+        UserSession.setLoggedIn(context, false)
 
         val intent = Intent(context, MainActivity::class.java)
         context.startActivity(intent)

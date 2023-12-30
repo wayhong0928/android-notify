@@ -1,3 +1,5 @@
+package com.example.cycu_notification_system
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
@@ -34,14 +36,6 @@ class SetSQL(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 
         db.execSQL("INSERT INTO SubscriptionCategories (MemberID, CategoryID) VALUES (1, 2), (1, 4), (1, 5), (2, 1), (2, 2), (3, 2)")
     }
 
-    // 取得表的資料列數量
-    private fun getTableCount(db: SQLiteDatabase, tableName: String): Int {
-        val cursor: Cursor = db.rawQuery("SELECT COUNT(*) FROM $tableName", null)
-        cursor.moveToFirst()
-        val count = cursor.getInt(0)
-        cursor.close()
-        return count
-    }
     // 用 user 帳戶調出他的 ID 再去抓訂閱公告類別
     @SuppressLint("Range")
     fun getUserIdFromAccount(userAccount: String): Int {

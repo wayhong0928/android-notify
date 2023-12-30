@@ -1,6 +1,5 @@
 package com.example.cycu_notification_system
 
-import SetSQL
 import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
