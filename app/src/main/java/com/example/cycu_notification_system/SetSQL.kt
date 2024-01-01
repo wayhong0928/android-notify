@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class SetSQL(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -36,7 +37,7 @@ class SetSQL(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 
         db.execSQL("INSERT INTO SubscriptionCategories (MemberID, CategoryID) VALUES (1, 2), (1, 4), (1, 5), (2, 1), (2, 2), (3, 2)")
     }
 
-    // 用 user 帳戶調出他的 ID 再去抓訂閱公告類別
+    // 用 user account 調出 user ID
     @SuppressLint("Range")
     fun getUserIdFromAccount(userAccount: String): Int {
         val db = readableDatabase
@@ -62,6 +63,7 @@ class SetSQL(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 
                 "INNER JOIN SubscriptionCategories ON Categories.ID = SubscriptionCategories.CategoryID " +
                 "INNER JOIN Members ON Members.ID = SubscriptionCategories.MemberID " +
                 "WHERE Members.ID = ?"
+
         val cursor: Cursor? = db.rawQuery(query, arrayOf(userId.toString()))
         cursor?.use {
             while (it.moveToNext()) {
@@ -72,5 +74,32 @@ class SetSQL(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 
         cursor?.close()
         db.close()
         return categories
+    }
+
+    // 更新 user 訂閱公告項目
+    fun updateSubsrcibedCategories(userAccount: String, selectedCategories: List<Int>):Boolean {
+        val userId = getUserIdFromAccount(userAccount)
+        val db = writableDatabase
+        db.beginTransaction()
+
+        return try {
+            // 刪除該使用者的所有訂閱紀錄
+            val deleteQuery = "DELETE FROM SubscriptionCategories WHERE MemberID = $userId"
+            db.execSQL(deleteQuery)
+            // 新增該使用者新訂閱的項目（CheckBox有打勾的項目）
+            for (categoryId in selectedCategories) {
+                val insertQuery = "INSERT INTO SubscriptionCategories (MemberID, CategoryID) VALUES ($userId, $categoryId)"
+                db.execSQL(insertQuery)
+            }
+
+            db.setTransactionSuccessful()
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
     }
 }

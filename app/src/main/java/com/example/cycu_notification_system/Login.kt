@@ -42,14 +42,9 @@ class Login : AppCompatActivity() {
             val useraccount = useraccount.text.toString().trim()
             val password = pwd.text.toString().trim()
 
-            // Log 登入開始
-            Log.d("LoginStatus", "登入開始")
-
             if (validateLogin(useraccount, password)) {
-                // 登入成功
                 Toast.makeText(this@Login, "登入成功", Toast.LENGTH_SHORT).show()
                 UserSession.setLoggedIn(this@Login, true)
-                // 從資料庫取得名稱
                 val name = getNameFromDatabase(useraccount)
 
                 // 設定 SharedPreferences
@@ -58,30 +53,21 @@ class Login : AppCompatActivity() {
                 editor.putString("useraccount", useraccount)
                 editor.putString("username", name)
                 editor.apply()
-                Log.d("UserData", "User Account: $useraccount")
-                Log.d("UserData", "User Name: $name")
 
-                // Log 登入成功
-                Log.d("LoginStatus", "登入成功")
-
-                // Intent 到首頁
                 val intent = Intent(this@Login, MainActivity::class.java)
                 startActivity(intent)
                 finish() // 結束登入頁面
             } else {
-                // 登入失敗
                 Toast.makeText(this@Login, "登入失敗", Toast.LENGTH_SHORT).show()
-
-                // Log 登入失敗
-                Log.d("LoginStatus", "登入失敗")
             }
         }
+
         btn_index.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
         btn_register.setOnClickListener {
-            // 跳轉到註冊頁面
             val intent = Intent(this, Register::class.java)
             startActivity(intent)
         }

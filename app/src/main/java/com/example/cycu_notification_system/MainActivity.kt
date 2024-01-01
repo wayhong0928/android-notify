@@ -38,13 +38,12 @@ class MainActivity : AppCompatActivity() {
 //        notify.startNotifyAfterDelay()
 
         val btn_personal = findViewById<Button>(R.id.personal)
+
         btn_personal.setOnClickListener {
             if (UserSession.isLoggedIn(this)) {
-                // 使用者已登入，導航到 profile.kt
                 val intent = Intent(this, Profile::class.java)
                 startActivity(intent)
             } else {
-                // 使用者未登入，導航到 login.kt
                 val intent = Intent(this, Login::class.java)
                 startActivity(intent)
             }
@@ -57,7 +56,7 @@ object UserSession {
     private const val USER_PREFS = "UserPrefs"
     private const val KEY_IS_LOGGED_IN = "isLoggedIn"
 
-    // 取得 SharedPreferences 實例
+    // 取得 SharedPreferences
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE)
     }
