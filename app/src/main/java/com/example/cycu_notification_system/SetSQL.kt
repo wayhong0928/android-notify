@@ -26,14 +26,14 @@ class SetSQL(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 
     // 建立資料表
     private fun createTables(db: SQLiteDatabase) {
         db.execSQL("CREATE TABLE IF NOT EXISTS Members (ID INTEGER PRIMARY KEY AUTOINCREMENT, Account TEXT UNIQUE NOT NULL, Username TEXT NOT NULL, Password TEXT NOT NULL)")
-        db.execSQL("CREATE TABLE IF NOT EXISTS Categories (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Sn INT)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS Categories (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Ann_title VARCHAR(6) NOT NULL, Sn INT)")
         db.execSQL("CREATE TABLE IF NOT EXISTS SubscriptionCategories (MemberID INTEGER, CategoryID INTEGER, PRIMARY KEY (MemberID, CategoryID), FOREIGN KEY (MemberID) REFERENCES Members(ID), FOREIGN KEY (CategoryID) REFERENCES Categories(ID))")
     }
 
     // 初始資料
     private fun insertInitialData(db: SQLiteDatabase) {
         db.execSQL("INSERT INTO Members (Account, Username, Password) VALUES ('user1', 'User One', 'password1'), ('user2', 'User Two', 'password2'), ('user3', 'User Three', 'password3')")
-        db.execSQL("INSERT INTO Categories (Name, Sn) VALUES ('行政公告', \"0\"), ('徵才公告', \"0\"), ('校內徵才', \"0\"), ('校外來文', \"0\"), ('實習/就業', \"0\"), ('活動預告', \"0\");")
+        db.execSQL("INSERT INTO Categories (Name, Ann_title, Sn) VALUES ('行政公告', \"ann_2\", \"0\"), ('徵才公告', \"ann_5\", \"0\"), ('校內徵才', \"ann_4\", \"0\"), ('校外來文', \"ann_3\", \"0\"), ('實習/就業', \"ann_10\", \"0\"), ('活動預告', \"act\", \"0\");")
         db.execSQL("INSERT INTO SubscriptionCategories (MemberID, CategoryID) VALUES (1, 2), (1, 4), (1, 5), (2, 1), (2, 2), (3, 2)")
     }
 

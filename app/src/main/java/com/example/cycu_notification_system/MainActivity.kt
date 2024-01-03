@@ -6,11 +6,16 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     private lateinit var getpost: Getpost
     private lateinit var dbHelper: SetSQL
-    lateinit var userAccount: SharedPreferences
     private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,13 +34,11 @@ class MainActivity : AppCompatActivity() {
             val editor = sharedPrefs.edit()
             editor.putBoolean("isFirstRun", false)
             editor.apply()
+
         }
         getpost = Getpost(this)
         getpost.initializeViews()
-
-//        通知的東西再想想吧
-//        val notify = Notify(this)
-//        notify.startNotifyAfterDelay()
+        scheduleWorker()
 
         val btn_personal = findViewById<Button>(R.id.personal)
 
@@ -48,6 +51,26 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+    }
+    private fun scheduleWorker() {
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<GetPostWorker>(
+            15, TimeUnit.MINUTES
+        )
+            .setConstraints(constraints)
+            .build()
+
+        val workManager = WorkManager.getInstance(applicationContext)
+
+        workManager.enqueueUniquePeriodicWork(
+            "YourUniqueWorkName",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            periodicWorkRequest
+        )
     }
 }
 

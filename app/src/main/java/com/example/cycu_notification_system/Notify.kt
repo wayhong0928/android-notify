@@ -21,25 +21,24 @@ class Notify(private val context: Context) {
     private val CHANNEL_ID = "MyNotificationChannel"
     private val notificationId = 100
 
-    fun startNotifyAfterDelay() {
+    fun startNotifyAfterDelay(title: String, content: String) {
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
-            sendNotification()
+            sendNotification(title, content)
         }, 10000) // 10 秒後發送通知
     }
 
-    private fun sendNotification() {
+    private fun sendNotification(title: String, content: String) {
         createNotificationChannel()
 
         val intent = Intent(context, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent,
-            PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("歡迎回來")
-            .setContentText("歡迎回來，這是通知訊息。")
+            .setContentTitle(title)
+            .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -49,14 +48,9 @@ class Notify(private val context: Context) {
         if (notificationPermissionGranted) {
             NotificationManagerCompat.from(context).notify(notificationId, builder.build())
         } else {
-            val notificationPermissionGranted = checkNotificationPermission()
-
-            if (notificationPermissionGranted) {
-                NotificationManagerCompat.from(context).notify(notificationId, builder.build())
-            } else {
-                showNotificationPermissionDialog()
-            }
+            showNotificationPermissionDialog()
         }
+
     }
 
     private fun checkNotificationPermission(): Boolean {
