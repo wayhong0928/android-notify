@@ -52,10 +52,8 @@ class GetPostWorker(private val context: Context, workerParams: WorkerParameters
         // 通知有變動的 ID
         for (id in updatedIDs) {
             if (!checkNotificationStatus(id)) {
-                val title = "新的公告"
-                // 要抓一下名稱
-                val content = "類別 $id 有新的公告。"
-                sendNotification(id, notifyManager, title, content)
+                val title = "新公告！"
+                sendNotification(id, notifyManager, title)
             }
         }
     }
@@ -82,12 +80,10 @@ class GetPostWorker(private val context: Context, workerParams: WorkerParameters
     }
 
     @SuppressLint("MissingPermission")
-    private fun sendNotification(categoryID: Int, notifyManager: NotificationManagerCompat, title: String, content: String) {
+    private fun sendNotification(categoryID: Int, notifyManager: NotificationManagerCompat, title: String) {
         val dbHelper = SetSQL(context)
         val db = dbHelper.readableDatabase
-
         val categoryName = getCategoryName(db, categoryID)
-
         db.close()
 
         val intent = Intent(context, MainActivity::class.java)
@@ -114,7 +110,6 @@ class GetPostWorker(private val context: Context, workerParams: WorkerParameters
         if (cursor.moveToFirst()) {
             categoryName = cursor.getString(cursor.getColumnIndex("Name"))
         }
-
         cursor.close()
         return categoryName
     }

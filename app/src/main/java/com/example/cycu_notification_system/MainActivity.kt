@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         if (isFirstRun) {
             // 第一次開啟應用程式，初始化
             dbHelper = SetSQL(this)
-
+            scheduleWorker()
             // 不再是第一次開啟應用程式
             val editor = sharedPrefs.edit()
             editor.putBoolean("isFirstRun", false)
@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         }
         getpost = Getpost(this)
         getpost.initializeViews()
-        scheduleWorker()
 
         val btn_personal = findViewById<Button>(R.id.personal)
 
@@ -60,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val periodicWorkRequest = PeriodicWorkRequestBuilder<GetPostWorker>(
-            5, TimeUnit.MINUTES
+            15, TimeUnit.MINUTES
         )
             .setConstraints(constraints)
             .build()
@@ -85,14 +84,12 @@ object UserSession {
         return context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE)
     }
 
-    // 設定登入狀態
     fun setLoggedIn(context: Context, isLoggedIn: Boolean) {
         val editor = getSharedPreferences(context).edit()
         editor.putBoolean(KEY_IS_LOGGED_IN, isLoggedIn)
         editor.apply()
     }
 
-    // 取得登入狀態
     fun isLoggedIn(context: Context): Boolean {
         return getSharedPreferences(context).getBoolean(KEY_IS_LOGGED_IN, false)
     }
