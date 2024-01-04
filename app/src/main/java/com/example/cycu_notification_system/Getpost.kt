@@ -128,9 +128,10 @@ class Getpost(private val context: Context) {
                                 if ( i == 0) {
                                     val databaseSn = getSnFromDatabase(id)
                                     val databaseId = getIdFromDatabase(id)
-                                    Log.e("CHECKLOGSN", "databaseSn = $databaseSn, sn = $sn")
+                                    Log.i("CHECKLOGSN", "databaseSn = $databaseSn, sn = $sn")
                                     if (databaseSn != null && sn != null && databaseId != null && databaseSn.toInt() != sn) {
                                         UpdatedIDsManager.addUpdatedID(databaseId.toInt())
+                                        Log.i("addUpdatedID", "addUpdatedID = $databaseId")
                                         markNotificationSent(id, sn)
                                     }
                                 }

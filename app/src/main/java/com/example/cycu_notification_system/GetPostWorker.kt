@@ -3,7 +3,6 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
@@ -13,7 +12,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@SuppressLint("Range")
 class GetPostWorker(private val context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
     private var db: SQLiteDatabase
     private val CHANNEL_ID = "MyNotificationChannel"
@@ -23,24 +27,36 @@ class GetPostWorker(private val context: Context, workerParams: WorkerParameters
         db = dbHelper.writableDatabase
         getpost = Getpost(context)
     }
+    val annTitleList: ArrayList<String> by lazy {
+        val cursor = db.rawQuery("SELECT Ann_title FROM Categories;", null)
+        val titles = ArrayList<String>()
+        while (cursor.moveToNext()) {
+            val annTitle = cursor.getString(cursor.getColumnIndex("Ann_title"))
+            titles.add(annTitle)
+        }
+        titles
+    }
+
     @SuppressLint("Range")
     override fun doWork(): Result {
         Log.i("GetPostWorker", "Starting doWork()")
-        val cursor = db.rawQuery("SELECT Ann_title FROM Categories;", null)
-        val annTitleList = ArrayList<String>()
-        while (cursor.moveToNext()) {
-            val annTitle = cursor.getString(cursor.getColumnIndex("Ann_title"))
-            annTitleList.add(annTitle)
-        }
-
+        Log.i("annTitleList", "annTitleList = $annTitleList")
         UpdatedIDsManager.clearUpdatedIDs()
+        val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-        // 執行 getpost 並更新資料庫
-        for (i in 0 until annTitleList.size) {
-            getpost.fetchContent(annTitleList[i])
+        coroutineScope.launch {
+            for (i in 0 until annTitleList.size) {
+                fetchContentAndNotify(i)
+                delay(1000)
+            }
         }
-        notifyChanges()
         return Result.success()
+    }
+    private suspend fun fetchContentAndNotify(index: Int) {
+        getpost.fetchContent(annTitleList[index])
+        delay(500)
+        notifyChanges()
+        UpdatedIDsManager.clearUpdatedIDs()
     }
 
     private fun notifyChanges() {
@@ -51,19 +67,20 @@ class GetPostWorker(private val context: Context, workerParams: WorkerParameters
 
         // 通知有變動的 ID
         for (id in updatedIDs) {
-            if (!checkNotificationStatus(id)) {
+            // 目前的作法是廣發通知
+            //if (!checkNotificationStatus(id)) {
                 val title = "新公告！"
                 sendNotification(id, notifyManager, title)
-            }
+            //}
         }
     }
-
-    private fun checkNotificationStatus(categoryID: Int): Boolean {
-        val cursor = db.rawQuery("SELECT * FROM SubscriptionCategories WHERE CategoryID = ?", arrayOf(categoryID.toString()))
-        val hasNotificationSent = cursor.count > 0
-        cursor.close()
-        return hasNotificationSent
-    }
+//    應該要抓到登入的人，然後抓取有訂閱的項目才進行通知，如果沒有登入的話就廣發通知
+//    private fun checkNotificationStatus(categoryID: Int): Boolean {
+//        val cursor = db.rawQuery("SELECT * FROM SubscriptionCategories WHERE CategoryID = ?", arrayOf(categoryID.toString()))
+//        val hasNotificationSent = cursor.count > 0
+//        cursor.close()
+//        return hasNotificationSent
+//    }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -81,6 +98,7 @@ class GetPostWorker(private val context: Context, workerParams: WorkerParameters
 
     @SuppressLint("MissingPermission")
     private fun sendNotification(categoryID: Int, notifyManager: NotificationManagerCompat, title: String) {
+        Log.i("sendNotification", "sendNotification title = $title")
         val dbHelper = SetSQL(context)
         val db = dbHelper.readableDatabase
         val categoryName = getCategoryName(db, categoryID)
