@@ -127,8 +127,10 @@ class Getpost(private val context: Context) {
                                 }
                                 if ( i == 0) {
                                     val databaseSn = getSnFromDatabase(id)
+                                    val databaseId = getIdFromDatabase(id)
                                     Log.e("CHECKLOGSN", "databaseSn = $databaseSn, sn = $sn")
-                                    if (databaseSn != null && sn != null && databaseSn.toInt() != sn) {
+                                    if (databaseSn != null && sn != null && databaseId != null && databaseSn.toInt() != sn) {
+                                        UpdatedIDsManager.addUpdatedID(databaseId.toInt())
                                         markNotificationSent(id, sn)
                                     }
                                 }
@@ -172,6 +174,16 @@ class Getpost(private val context: Context) {
         }
         cursor.close()
         return sn
+    }
+    @SuppressLint("Range")
+    fun getIdFromDatabase(Ann_title: String): String? {
+        val cursor = db.rawQuery("SELECT ID FROM Categories WHERE Ann_title = ?", arrayOf(Ann_title))
+        var ID: String? = null
+        if (cursor.moveToFirst()) {
+            ID = cursor.getString(cursor.getColumnIndex("ID"))
+        }
+        cursor.close()
+        return ID
     }
 
     fun markNotificationSent(Ann_title: String, snValue: Int) {

@@ -18,8 +18,6 @@ class GetPostWorker(private val context: Context, workerParams: WorkerParameters
     private var db: SQLiteDatabase
     private val CHANNEL_ID = "MyNotificationChannel"
     private var getpost: Getpost
-    private val updatedIDs = mutableListOf<Int>() // 儲存有變動的 ID
-
     init {
         val dbHelper = SetSQL(context)
         db = dbHelper.writableDatabase
@@ -35,22 +33,27 @@ class GetPostWorker(private val context: Context, workerParams: WorkerParameters
             annTitleList.add(annTitle)
         }
 
+        UpdatedIDsManager.clearUpdatedIDs()
+
         // 執行 getpost 並更新資料庫
-        for( i in 0..5) {
+        for (i in 0 until annTitleList.size) {
             getpost.fetchContent(annTitleList[i])
-            notifyChanges()
         }
+        notifyChanges()
         return Result.success()
     }
 
     private fun notifyChanges() {
         val notifyManager = NotificationManagerCompat.from(context)
         createNotificationChannel()
+        val updatedIDs = UpdatedIDsManager.getUpdatedIDs()
+        Log.i("notifyChanges", "notifyChanges updatedIDs = $updatedIDs")
 
         // 通知有變動的 ID
         for (id in updatedIDs) {
             if (!checkNotificationStatus(id)) {
                 val title = "新的公告"
+                // 要抓一下名稱
                 val content = "類別 $id 有新的公告。"
                 sendNotification(id, notifyManager, title, content)
             }

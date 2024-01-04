@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.Constraints
@@ -53,13 +54,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun scheduleWorker() {
-
+        Log.i("scheduleWorker", "Starting scheduleWorker()")
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
         val periodicWorkRequest = PeriodicWorkRequestBuilder<GetPostWorker>(
-            15, TimeUnit.MINUTES
+            5, TimeUnit.MINUTES
         )
             .setConstraints(constraints)
             .build()
@@ -96,4 +97,20 @@ object UserSession {
         return getSharedPreferences(context).getBoolean(KEY_IS_LOGGED_IN, false)
     }
 }
+object UpdatedIDsManager {
+    private val updatedIDs = mutableListOf<Int>()
+
+    fun addUpdatedID(id: Int) {
+        updatedIDs.add(id)
+    }
+
+    fun getUpdatedIDs(): List<Int> {
+        return updatedIDs.toList()
+    }
+
+    fun clearUpdatedIDs() {
+        updatedIDs.clear()
+    }
+}
+
 
